@@ -1,0 +1,40 @@
+#!/bin/bash
+
+
+INDEX_LIFECYCLE_POLICY="filebeat-docker"
+INDEX_PATTERN="filebeat-docker"
+INDEX_TEMPLATE="filebeat-docker"
+DATASTREAM="filebeat-docker"
+
+curl -u "elastic:changeme" -X PUT "http://localhost:9200/_ilm/policy/${INDEX_LIFECYCLE_POLICY}" -H "Content-Type: application/json" -d @bin/es/policy.json
+
+sed -e "s/{{INDEX_PATTERN}}/${INDEX_PATTERN}/g" -e "s/{{INDEX_LIFECYCLE_POLICY}}/${INDEX_LIFECYCLE_POLICY}/g" bin/es/index-template.json > bin/es/index-template.prepared.json
+
+curl -u "elastic:changeme" -X PUT "http://localhost:9200/_index_template/${INDEX_TEMPLATE}" -H "Content-Type: application/json" -d @bin/es/index-template.prepared.json
+
+rm bin/es/index-template.prepared.json
+
+
+curl -u "elastic:changeme" -X PUT "http://localhost:9200/_data_stream/${DATASTREAM}" -H "Content-Type: application/json"
+
+
+#============================
+
+
+
+INDEX_LIFECYCLE_POLICY="filebeat-host"
+INDEX_PATTERN="filebeat-host"
+INDEX_TEMPLATE="filebeat-host"
+DATASTREAM="filebeat-host"
+
+curl -u "elastic:changeme" -X PUT "http://localhost:9200/_ilm/policy/${INDEX_LIFECYCLE_POLICY}" -H "Content-Type: application/json" -d @bin/es/policy.json
+
+sed -e "s/{{INDEX_PATTERN}}/${INDEX_PATTERN}/g" -e "s/{{INDEX_LIFECYCLE_POLICY}}/${INDEX_LIFECYCLE_POLICY}/g" bin/es/index-template.json > bin/es/index-template.prepared.json
+
+curl -u "elastic:changeme" -X PUT "http://localhost:9200/_index_template/${INDEX_TEMPLATE}" -H "Content-Type: application/json" -d @bin/es/index-template.prepared.json
+
+rm bin/es/index-template.prepared.json
+
+
+curl -u "elastic:changeme" -X PUT "http://localhost:9200/_data_stream/${DATASTREAM}" -H "Content-Type: application/json"
+

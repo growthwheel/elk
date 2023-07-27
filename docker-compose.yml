@@ -69,28 +69,28 @@ services:
       - dev-net
     restart: unless-stopped
 
-  logstash:
-    build:
-      context: logstash/
-      args:
-        ELASTIC_VERSION: ${ELASTIC_VERSION}
-    volumes:
-      - ./logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml:ro,Z
-      - ./logstash/pipeline:/usr/share/logstash/pipeline:ro,Z
-    ports:
-      - 5044:5044
-      - 50000:50000/tcp
-      - 50000:50000/udp
-      - 9600:9600
-    environment:
-      LS_JAVA_OPTS: -Xms256m -Xmx256m
-      LOGSTASH_INTERNAL_PASSWORD: ${LOGSTASH_INTERNAL_PASSWORD:-}
-    networks:
-#      - elk
-      - dev-net
-    depends_on:
-      - elasticsearch
-    restart: unless-stopped
+#  logstash:
+#    build:
+#      context: logstash/
+#      args:
+#        ELASTIC_VERSION: ${ELASTIC_VERSION}
+#    volumes:
+#      - ./logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml:ro,Z
+#      - ./logstash/pipeline:/usr/share/logstash/pipeline:ro,Z
+#    ports:
+#      - 5044:5044
+#      - 50000:50000/tcp
+#      - 50000:50000/udp
+#      - 9600:9600
+#    environment:
+#      LS_JAVA_OPTS: -Xms256m -Xmx256m
+#      LOGSTASH_INTERNAL_PASSWORD: ${LOGSTASH_INTERNAL_PASSWORD:-}
+#    networks:
+##      - elk
+#      - dev-net
+#    depends_on:
+#      - elasticsearch
+#    restart: unless-stopped
 
   kibana:
     build:
@@ -118,6 +118,58 @@ services:
     links:
       - elasticsearch
     restart: unless-stopped
+
+
+  filebeat-host:
+      build:
+        context: filebeat-host/
+        args:
+          ELASTIC_VERSION: ${ELASTIC_VERSION}
+
+      depends_on:
+        - elasticsearch
+
+      volumes:
+        - /var/run:/var/run
+        - /var/log:/var/log/host
+        - /var/lib/docker:/var/lib/docker
+
+
+      environment:
+        LS_JAVA_OPTS: -Xms256m -Xmx256m
+        ELASTICSEARCH_HOSTS: elasticsearch
+        ELASTICSEARCH_USERNAME: ${ELASTIC_FILEBEAT_USER}
+        ELASTICSEARCH_PASSWORD: ${ELASTIC_FILEBEAT_PASSWORD}
+      networks:
+        - dev-net
+
+      restart: unless-stopped
+
+
+  filebeat-docker:
+      build:
+        context: filebeat-docker/
+        args:
+          ELASTIC_VERSION: ${ELASTIC_VERSION}
+
+      depends_on:
+        - elasticsearch
+
+      volumes:
+        - /var/run:/var/run
+        - /var/log:/var/log/host
+        - /var/lib/docker:/var/lib/docker
+
+
+      environment:
+        LS_JAVA_OPTS: -Xms256m -Xmx256m
+        ELASTICSEARCH_HOSTS: elasticsearch
+        ELASTICSEARCH_USERNAME: ${ELASTIC_FILEBEAT_USER}
+        ELASTICSEARCH_PASSWORD: ${ELASTIC_FILEBEAT_PASSWORD}
+      networks:
+        - dev-net
+
+      restart: unless-stopped
 
 networks:
 #  elk:
