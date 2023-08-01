@@ -1,0 +1,23 @@
+/var/log/docker/containers/*/*.log
+{
+    daily
+    rotate 7
+
+    # Use the copytruncate method for log rotation
+    copytruncate
+
+    # Do not display an error if log file is missing
+    missingok
+
+    # Compress the rotated log files with gzip
+    compress
+
+    # Postpone compression until the next rotation
+    delaycompress
+
+    # Do not rotate an empty log file
+    notifempty
+
+    # Create a new log file with specified permissions
+    create 0644 root root
+}

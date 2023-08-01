@@ -171,6 +171,17 @@ services:
 
       restart: unless-stopped
 
+  logrotate:
+      build:
+        context: logrotate/
+
+      restart: always
+
+        # LOGS
+
+      volumes:
+        - /var/lib/docker/containers:/var/log/docker/containers
+
 networks:
 #  elk:
 #    driver: bridge
