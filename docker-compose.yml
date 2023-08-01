@@ -171,6 +171,36 @@ services:
 
       restart: unless-stopped
 
+
+  metricbeat:
+      build:
+        context: metricbeat/
+        args:
+          ELASTIC_VERSION: ${ELASTIC_VERSION}
+
+      depends_on:
+        - elasticsearch
+
+      command: -e -system.hostfs=/hostfs
+      network_mode: host
+      volumes:
+         - /proc:/hostfs/proc:ro
+         - /sys/fs/cgroup:/hostfs/sys/fs/cgroup:ro
+         - /:/hostfs:ro
+
+#      volumes:
+
+      environment:
+        LS_JAVA_OPTS: -Xms256m -Xmx256m
+        ELASTICSEARCH_HOSTS: 127.0.0.1
+        ELASTICSEARCH_USERNAME: ${ELASTIC_FILEBEAT_USER}
+        ELASTICSEARCH_PASSWORD: ${ELASTIC_FILEBEAT_PASSWORD}
+#      networks:
+#        - dev-net
+
+      restart: unless-stopped
+
+
   logrotate:
       build:
         context: logrotate/
