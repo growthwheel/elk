@@ -103,9 +103,9 @@ services:
       - 5601:5601
 
     environment:
-      SERVER_NAME: elk.growthwheel.net
+      SERVER_NAME: elk.dev.growthwheel.net
       KIBANA_SYSTEM_PASSWORD: ${KIBANA_SYSTEM_PASSWORD:-}
-      VIRTUAL_HOST: "elk.growthwheel.net"
+      VIRTUAL_HOST: "elk.dev.growthwheel.net"
       VIRTUAL_PROTO: http
       VIRTUAL_PORT: "5601"
       HTTPS_METHOD: noredirect

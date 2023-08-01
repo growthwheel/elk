@@ -1,0 +1,2 @@
+#
+* 6 * * * /usr/sbin/logrotate -v /etc/logrotate.d >> /var/log/logrotate.log 2>&1
