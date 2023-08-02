@@ -181,9 +181,10 @@ services:
       depends_on:
         - elasticsearch
 
-      command: -e -system.hostfs=/hostfs
+      command: -e
       network_mode: host
       volumes:
+         - /var/run/docker.sock:/var/run/docker.sock:ro
          - /proc:/hostfs/proc:ro
          - /sys/fs/cgroup:/hostfs/sys/fs/cgroup:ro
          - /:/hostfs:ro

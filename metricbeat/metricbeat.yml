@@ -1,4 +1,21 @@
 metricbeat.modules:
+
+- module: docker
+  metricsets:
+    - "container"
+    - "cpu"
+    - "diskio"
+    - "event"
+    - "healthcheck"
+    - "info"
+    #- "image"
+    - "memory"
+    - "network"
+    #- "network_summary"
+  hosts: ["unix:///var/run/docker.sock"]
+  period: 10s
+  enabled: true
+
 - module: system
   metricsets:
     - cpu             # CPU usage
@@ -18,6 +35,7 @@ metricbeat.modules:
     #- service        # systemd service information
   enabled: true
   period: 10s
+  hostfs: /hostfs
   processes: ['.*']
 
   # Configure the mount point of the host’s filesystem for use in monitoring a host from within a container
